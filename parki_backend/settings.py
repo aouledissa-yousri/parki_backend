@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'login',
+    'core'
 ]
 
 MIDDLEWARE = [
@@ -77,6 +79,15 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+    },
+
+    'parki': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd3iu20lta567me',
+        'USER': 'ngdtxfkoyoziey',
+        'PASSWORD': 'ff62d529e766ec3d6a9eba8f10bb6eab2f08703f01444c04f47b4886aed34bf5',
+        'HOST': 'ec2-52-5-110-35.compute-1.amazonaws.com',
+        'PORT': '5432'
     }
 }
 

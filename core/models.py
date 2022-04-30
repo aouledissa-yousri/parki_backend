@@ -3,6 +3,8 @@ from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
 
+
+
 class User(models.Model):
     name = models.CharField(max_length = 255, default="")
     lastname = models.CharField(max_length = 255, default="")
@@ -10,6 +12,16 @@ class User(models.Model):
     email = models.CharField(max_length = 255, default = "", unique = True)
     phoneNUmber = models.CharField(max_length = 255, default = "", unique = True)
     password = models.CharField(max_length = 255, default = "", unique = True)
+
+    def getData(self):
+        return {
+            "name": self.name,
+            "lastname": self.lastname,
+            "username": self.username,
+            "email": self.email,
+            "phoneNumber": self.phoneNUmber,
+            "password": self.password
+        }
 
 
 class Driver(User):
@@ -30,7 +42,7 @@ class MunicipalAgent(Agent):
 class PrivateAgent(Agent):
     pass  
 
-class paymentLog(models.Model):
+class PaymentLog(models.Model):
     date = models.DateField(default = "")
     paidAmount = models.FloatField(max_length = 255, default = 0)
     object = models.CharField(max_length = 255, default = "")
@@ -44,7 +56,7 @@ class Transaction(models.Model):
 
 
 
-class parkingLot(models.Model):
+class ParkingLot(models.Model):
     address = models.CharField(max_length = 255, default="")
     name = models.CharField(max_length = 255, default="")
     nbPlaces = models.IntegerField(default = 0)
@@ -63,7 +75,7 @@ class Car(models.Model):
     model = models.CharField(max_length = 255, default="")
     color = models.CharField(max_length = 255, default="")
     driver = models.ForeignKey(Driver, on_delete = models.CASCADE, default = 0)
-    parkingLot = models.ForeignKey(parkingLot, on_delete = models.CASCADE, default = 0)
+    parkingLot = models.ForeignKey(ParkingLot, on_delete = models.CASCADE, default = 0)
     MunicipalityZone = models.ForeignKey(MunicipalityZone, on_delete = models.CASCADE, default = 0)
 
 

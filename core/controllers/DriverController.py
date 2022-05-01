@@ -19,7 +19,11 @@ class DriverController(UserController):
     
     @staticmethod 
     def login(request):
-        return UserController.login(request, Driver)
+        result = UserController.login(request)
+        if result["message"] == "success":
+            result["user"] = Driver.objects.get(user_ptr_id = result["user"].id).getData()
+        return result
+
 
 
 

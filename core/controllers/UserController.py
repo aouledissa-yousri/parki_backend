@@ -11,28 +11,31 @@ class UserController:
         pass
 
     @staticmethod 
-    def login(request, model = User):
+    def login(request):
         try: 
             credentials = Credentials(request)
-            target = model.objects.get( Q(username=credentials.getUsername()) | Q(email=credentials.getEmail() ))
+            target = User.objects.get( Q(username=credentials.getUsername()) | Q(email=credentials.getEmail() ))
             if target.password == credentials.getPassword():
                 return {
                     "message": "success",
-                    "user": target.getData(),
+                    "user": target,
                     "token": UserController.generateToken({
                         "username": target.username,
                         "name": target.name
                     })
                 }
-            else: 
-                return "password is wrong"
-        except model.DoesNotExist : 
-            return "user not found" 
+            else:  
+                return {"message":"password is wrong"}
+        except User.DoesNotExist : 
+            return {"message":"user not found"}
     
 
     @staticmethod 
     def generateToken(payload):
         return jwt.encode(payload, SECRET_KEY, algorithm = "HS256")
+    
+
+        
 
     
     

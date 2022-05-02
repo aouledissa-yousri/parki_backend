@@ -19,3 +19,8 @@ def agentLogin(request):
 def adminLogin(request):
     return JsonResponse({"result": AdminController.login(request)})
 
+@api_view(["GET"])
+def test(request):
+    return JsonResponse({"result": "hello world"})
+
+

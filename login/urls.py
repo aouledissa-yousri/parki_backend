@@ -5,5 +5,4 @@ urlpatterns = [
     path("driverLogin/", views.driverLogin),
     path("agentLogin/", views.agentLogin),
     path("adminLogin/", views.adminLogin),
-    path("test/", views.test)
 ]

@@ -122,11 +122,13 @@ class Driver(User):
 
 
 class Admin(User):
-    
-    def createAgentAccount(self, agent):
+
+    @staticmethod
+    def createAgentAccount(agent):
         agent.save()
     
-    def createAdminAccount(self, admin):
+    @staticmethod
+    def createAdminAccount(admin):
         admin.save()
 
 
@@ -134,10 +136,19 @@ class Admin(User):
 class Agent(User):
     workAddress = models.CharField(max_length = 255, default="")
 
+    def getDataToSignUp(self):
+        result = super().getDataToSignUp()
+        result["workAddress"] = self.workAddress
+        return result
+
     def getData(self):
         result = super().getData()
         result["workAddress"] = self.workAddress
         return result 
+
+    def setData(self, request):
+        super().setData(request)
+        self.workAddress = request.get("workAddress")
 
     class Meta: 
         abstract = True

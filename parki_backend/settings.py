@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
-import django_heroku 
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -44,11 +43,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders',
     'login',
     'signUp',
-    'core'
+    'core',
+    'manageAgents'
 ]
 
 MIDDLEWARE = [
@@ -151,5 +150,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-django_heroku.settings(locals())
 

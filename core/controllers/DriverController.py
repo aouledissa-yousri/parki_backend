@@ -15,8 +15,7 @@ class DriverController(UserController):
         driver = DriverSerializer(data = driver.getDataToSignUp())
         if driver.is_valid():
             driver.save()
-            return driver.is_valid()
-        return False
+        return driver.is_valid()
     
     #driver login
     @staticmethod 

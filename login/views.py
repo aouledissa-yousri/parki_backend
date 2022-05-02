@@ -5,6 +5,7 @@ from core.controllers.AgentController import AgentController
 from core.controllers.AdminController import AdminController
 from rest_framework.decorators import api_view
 
+
 # Create your views here.
 
 @api_view(["POST"])
@@ -19,8 +20,5 @@ def agentLogin(request):
 def adminLogin(request):
     return JsonResponse({"result": AdminController.login(request)})
 
-@api_view(["GET"])
-def test(request):
-    return JsonResponse({"result": "hello world"})
 
 

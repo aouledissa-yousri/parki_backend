@@ -12,3 +12,8 @@ def createMunicipalAgent(request):
 @api_view(["POST"])
 def createPrivateAgent(request):
     return JsonResponse({"result": AdminController.createPrivateAgent(request)})
+
+
+@api_view(["POST"])
+def createAdminAccount(request):
+    return JsonResponse({"result": AdminController.createAdmin(request)})

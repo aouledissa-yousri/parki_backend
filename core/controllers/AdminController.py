@@ -1,6 +1,6 @@
 from core.controllers.UserController import UserController
 from core.models import Admin, PrivateAgent, MunicipalAgent, Admin
-from core.serializers import PrivateAgentSerializer, MunicipalAgentSerializer
+from core.serializers import PrivateAgentSerializer, MunicipalAgentSerializer, AdminSerializer
 import json
 
 class AdminController(UserController):
@@ -43,5 +43,14 @@ class AdminController(UserController):
     
     @staticmethod
     def createAdmin(request):
-        pass
+        request = json.loads(request.body)
+        admin = Admin()
+        admin.setData(request)
+        print(admin.getData())
+        admin = AdminSerializer(data = admin.getDataToSignUp())
+
+        if admin.is_valid():
+            Admin.createAdminAccount(admin)
+        
+        return admin.is_valid()
 

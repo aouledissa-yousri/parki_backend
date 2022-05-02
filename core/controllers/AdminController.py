@@ -9,7 +9,10 @@ class AdminController(UserController):
     def login(request):
         result = UserController.login(request)
         if result["message"] == "success":
-            result["user"] = Admin.objects.get(user_ptr_id = result["user"].id).getData()
+            try: 
+                result["user"] = Admin.objects.get(user_ptr_id = result["user"].id).getData()
+            except Admin.DoesNotExist:
+                return {"message":"user not found"}
         return result
     
     @staticmethod 
@@ -37,4 +40,8 @@ class AdminController(UserController):
             Admin.createAgentAccount(agent)
 
         return agent.is_valid()
+    
+    @staticmethod
+    def createAdmin(request):
+        pass
 

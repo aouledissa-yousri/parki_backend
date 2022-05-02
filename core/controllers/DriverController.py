@@ -24,7 +24,10 @@ class DriverController(UserController):
 
         #when login is successful get user additional data
         if result["message"] == "success":
-            result["user"] = Driver.objects.get(user_ptr_id = result["user"].id).getData()
+            try:
+                result["user"] = Driver.objects.get(user_ptr_id = result["user"].id).getData()
+            except Driver.DoesNotExist:
+                return {"message":"user not found"}
         return result
 
 

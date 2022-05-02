@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'login',
     'signUp',
     'core',
-    'manageAgents'
+    'manageUsers'
 ]
 
 MIDDLEWARE = [

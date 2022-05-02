@@ -14,7 +14,10 @@ class AgentController(UserController):
             try:
                 result["user"] = MunicipalAgent.objects.get(user_ptr_id = result["user"].id).getData()
             except MunicipalAgent.DoesNotExist:
-                result["user"] = PrivateAgent.objects.get(user_ptr_id = result["user"].id).getData()
+                try:
+                    result["user"] = PrivateAgent.objects.get(user_ptr_id = result["user"].id).getData()
+                except PrivateAgent.DoesNotExist:
+                    return {"message":"user not found"}
         return result
         
     

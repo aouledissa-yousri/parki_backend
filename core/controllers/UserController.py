@@ -20,6 +20,7 @@ class UserController:
 
             #if username (or email) and password are correct get user data and access token 
             if account.password == credentials.getPassword() and (not account.isBlocked()):
+                account.restartTries()
                 return {
                     "message": "success",
                     "user": account,
@@ -33,12 +34,12 @@ class UserController:
             account.decrementTries()
 
             #if user provides a wrong password for the third time block his account for a specefic period of time
-            if account.getTries() < 1 and ( not account.isBlocked()):
-                account.block()
-                Thread(target = account.unblock).start()
+            if account.getTries() < 1 :
+                if not account.isBlocked():
+                    account.block()
+                    Thread(target = account.unblockAccount).start()
 
-            #if account is blocked temporarily
-            if account.getTries() < 1: 
+                #if account is blocked temporarily
                 return {"message": "your account is temporarily blocked please try again later!"}
 
             #if password is wrong

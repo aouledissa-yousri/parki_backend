@@ -60,11 +60,15 @@ class User(models.Model):
         User.objects.filter(id = self.id).update(blocked= self.isBlocked())
     
     def unblockAccount(self):
-        time.sleep(10000)
+        time.sleep(10800)
         self.setTries(3)
         User.objects.filter(id = self.id).update(tries= self.getTries())
         self.blocked = False
         User.objects.filter(id = self.id).update(blocked= self.isBlocked())
+    
+    def restartTries(self):
+        self.setTries(3)
+        User.objects.filter(id = self.id).update(tries= self.getTries())
 
 
     

@@ -3,6 +3,7 @@ from core.models import User, Driver, Agent, Admin
 import jwt
 from core.classes.Credentials import Credentials
 from parki_backend.settings import SECRET_KEY
+from threading import Thread
 
 class UserController:
 
@@ -13,23 +14,41 @@ class UserController:
     @staticmethod 
     def login(request):
         try: 
+            #serach for user in database 
             credentials = Credentials(request)
-            target = User.objects.get( Q(username=credentials.getUsername()) | Q(email=credentials.getEmail() ))
-            if target.password == credentials.getPassword():
+            account = User.objects.get( Q(username=credentials.getUsername()) | Q(email=credentials.getEmail() ))
+
+            #if username (or email) and password are correct get user data and access token 
+            if account.password == credentials.getPassword() and (not account.isBlocked()):
                 return {
                     "message": "success",
-                    "user": target,
+                    "user": account,
                     "token": UserController.generateToken({
-                        "username": target.username,
-                        "name": target.name
+                        "username": account.username,
+                        "name": account.name
                     })
                 }
-            else:  
-                return {"message":"password is wrong"}
+            
+            #if password is wrong decrement login possible attempts
+            account.decrementTries()
+
+            #if user provides a wrong password for the third time block his account for a specefic period of time
+            if account.getTries() < 1 and ( not account.isBlocked()):
+                account.block()
+                Thread(target = account.unblock).start()
+
+            #if account is blocked temporarily
+            if account.getTries() < 1: 
+                return {"message": "your account is temporarily blocked please try again later!"}
+
+            #if password is wrong
+            return {"message":"password is wrong"}
+        
+        #if user is not found
         except User.DoesNotExist : 
             return {"message":"user not found"}
     
-
+    #generate access token 
     @staticmethod 
     def generateToken(payload):
         return jwt.encode(payload, SECRET_KEY, algorithm = "HS256")

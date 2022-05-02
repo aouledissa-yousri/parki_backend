@@ -4,9 +4,12 @@ from core.models import MunicipalAgent, PrivateAgent
 
 class AgentController(UserController):
     
+    #agent login
     @staticmethod 
     def login(request):
         result = UserController.login(request)
+
+        #when login is successful get the agent type to make user access the right dashboard
         if result["message"] == "success":
             try:
                 result["user"] = MunicipalAgent.objects.get(user_ptr_id = result["user"].id).getData()

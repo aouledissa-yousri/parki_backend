@@ -1,6 +1,6 @@
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
-
+from django.core.validators import MaxValueValidator
+import time
 # Create your models here.
 
 
@@ -12,6 +12,8 @@ class User(models.Model):
     email = models.CharField(max_length = 255, default = "", unique = True)
     phoneNumber = models.CharField(max_length = 255, default = "", unique = True)
     password = models.CharField(max_length = 255, default = "")
+    tries = models.IntegerField(default = 3, validators = [MaxValueValidator(3)] )
+    blocked = models.BooleanField(default = False)
 
     def getDataToSignUp(self):
         return {
@@ -40,6 +42,32 @@ class User(models.Model):
         self.phoneNumber = request.get("phoneNumber"),
         self.password = request.get("password")
     
+    def isBlocked(self):
+        return self.blocked
+    
+    def getTries(self):
+        return self.tries
+    
+    def setTries(self, tries):
+        self.tries = tries
+    
+    def decrementTries(self):
+        self.setTries(self.getTries() - 1)
+        User.objects.filter(id = self.id).update(tries= self.getTries())
+    
+    def block(self):
+        self.blocked = True
+        User.objects.filter(id = self.id).update(blocked= self.isBlocked())
+    
+    def unblockAccount(self):
+        time.sleep(10000)
+        self.setTries(3)
+        User.objects.filter(id = self.id).update(tries= self.getTries())
+        self.blocked = False
+        User.objects.filter(id = self.id).update(blocked= self.isBlocked())
+
+
+    
 
 
 class Driver(User):
@@ -59,9 +87,9 @@ class Driver(User):
         self.setCars()
         self.setPaymentLogs()
         self.setTransactions()
-        result["cars"] = self.cars 
-        result["transactions"] = self.transactions
-        result["payments"] = self.payments
+        result["cars"] = self.getCars() 
+        result["transactions"] = self.getTransactions()
+        result["payments"] = self.getPaymentLogs()
         return result
     
     def setCars(self):
@@ -88,12 +116,24 @@ class Driver(User):
 
 
 
+
 class Admin(User):
-    pass 
+    
+    def createAgentAccount(self, agent):
+        agent.save()
+    
+    def createAdminAccount(self, admin):
+        admin.save()
+
 
 
 class Agent(User):
     workAddress = models.CharField(max_length = 255, default="")
+
+    def getData(self):
+        result = super().getData()
+        result["workAddress"] = self.workAddress
+        return result 
 
     class Meta: 
         abstract = True
@@ -141,7 +181,7 @@ class MunicipalityZone(models.Model):
 
 
 class Car(models.Model):
-    carSerialNumber = models.CharField(max_length = 255, default="")
+    carSerialNumber = models.CharField(max_length = 255, default="", unique = True)
     brand = models.CharField(max_length = 255, default="")
     model = models.CharField(max_length = 255, default="")
     color = models.CharField(max_length = 255, default="")

@@ -25,7 +25,10 @@ SECRET_KEY = 'django-insecure-teybm%**j$my+yaio4=mpp!!wh%)3*&3sy%3a9tou7r@2nw44(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "parki-backend-test.herokuapp.com",
+    "127.0.0.1"
+]
 
 
 # Application definition

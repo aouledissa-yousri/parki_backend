@@ -1,6 +1,7 @@
 from django.db.models import Q
 from core.models import User, Driver, Agent, Admin
 import jwt
+import json
 from core.classes.Credentials import Credentials
 from parki_backend.settings import SECRET_KEY
 from threading import Thread
@@ -53,6 +54,19 @@ class UserController:
     @staticmethod 
     def generateToken(payload):
         return jwt.encode(payload, SECRET_KEY, algorithm = "HS256")
+    
+
+    @staticmethod 
+    def searchUser(request, model):
+        request = json.loads(request.body)
+        try: 
+            user = model.objects.get(username = request.get("currentUsername"))
+        except model.DoesNotExist:
+            return None 
+        
+        return user, request
+
+        
     
 
         

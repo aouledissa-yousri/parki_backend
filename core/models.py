@@ -69,6 +69,8 @@ class User(models.Model):
     def restartTries(self):
         self.setTries(3)
         User.objects.filter(id = self.id).update(tries= self.getTries())
+ 
+
 
 
     
@@ -130,6 +132,18 @@ class Admin(User):
     @staticmethod
     def createAdminAccount(admin):
         admin.save()
+    
+    @staticmethod
+    def deleteAgent(agent):
+        agent.delete()
+    
+    @staticmethod
+    def deleteAdmin(admin):
+        admin.delete()
+    
+    @staticmethod 
+    def deleteDriver(driver):
+        driver.delete()
 
 
 

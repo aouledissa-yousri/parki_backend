@@ -29,6 +29,24 @@ class DriverController(UserController):
             except Driver.DoesNotExist:
                 return {"message":"user not found"}
         return result
+    
+    @staticmethod 
+    def updateAccount(request):
+        driver = UserController.searchUser(request, Driver)
+        request = json.loads(request)
+        if driver != None: 
+            driver.setData(request.get("newData"))
+            driver = DriverSerializer(data = driver.getDataToSignUp())
+
+            if driver.is_valid():
+               driver.save()
+               return {"message": "account data has been updated successfully"}
+
+            return {"message": "account data update failed"}
+        return {"message": "user not found"} 
+    
+
+            
 
 
 

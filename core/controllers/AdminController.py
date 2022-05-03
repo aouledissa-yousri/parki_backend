@@ -1,5 +1,5 @@
 from core.controllers.UserController import UserController
-from core.models import Admin, PrivateAgent, MunicipalAgent, Admin
+from core.models import Admin, PrivateAgent, MunicipalAgent, Admin, Driver
 from core.serializers import PrivateAgentSerializer, MunicipalAgentSerializer, AdminSerializer
 import json
 
@@ -53,4 +53,42 @@ class AdminController(UserController):
             Admin.createAdminAccount(admin)
         
         return admin.is_valid()
+    
+    @staticmethod 
+    def deleteAgent(request):
+        request = json.loads(request.body)
+        try: 
+            agent = MunicipalAgent.objec.get(username = request.get("username"))
+        except MunicipalAgent.DoesNotExist:
+            try: 
+                agent = PrivateAgent.objec.get(username = request.get("username"))
+            except PrivateAgent.DoesNotExist:
+                return False
+        
+        Admin.deleteAgent(agent)
+        return True
+    
+    @staticmethod
+    def deleteAdmin(request):
+        request = json.loads(request.body)
+        try: 
+            admin = Admin.objects.get(username = request.get("username"))
+        except Admin.DoesNotExist:
+            return False 
+        
+        Admin.deleteAdmin(admin)
+        return True
+    
+    @staticmethod 
+    def deleteDriver(request):
+        request = json.loads(request.body)
+        try: 
+            driver = Driver.objects.get(username = request.get("username"))
+        except Driver.DoesNotExist:
+            return False 
+        
+        Admin.deleteDriver(driver)
+        return True
+    
+    
 

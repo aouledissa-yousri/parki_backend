@@ -1,6 +1,6 @@
 from core.controllers.AgentController import AgentController
 from core.models import MunicipalAgent
+from core.serializers import MunicipalAgentSerializer
 
-class MunicipalAgentCOntroller(AgentController):
-    pass
-
+class MunicipalAgentController(AgentController):
+    pass 

@@ -5,7 +5,7 @@ class PrivateAgentController(AgentController):
     
     @staticmethod 
     def updateAccount(request):
-        admin = UserController.searchUser(request, Admin)
+        admin = UserController.searchUser(request, PrivateAgent)
         request = json.loads(request.body)
         if admin != None: 
             return admin.updateAccount(request.get("newData"), PrivateAgent)

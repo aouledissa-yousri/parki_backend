@@ -1,4 +1,3 @@
-from django.db.models import Q
 from core.models import User, Driver, Agent, Admin
 import jwt
 import json
@@ -17,7 +16,7 @@ class UserController:
         try: 
             #serach for user in database 
             credentials = Credentials(request)
-            account = User.objects.get( Q(username=credentials.getUsername()) | Q(email=credentials.getEmail() ))
+            account = User.login(credentials)
 
             #if username (or email) and password are correct get user data and access token 
             if account.password == credentials.getPassword() and (not account.isBlocked()):

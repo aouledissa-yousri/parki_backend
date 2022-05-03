@@ -8,7 +8,7 @@ class MunicipalAgentController(AgentController):
     
     @staticmethod 
     def updateAccount(request):
-        admin = UserController.searchUser(request, Admin)
+        admin = UserController.searchUser(request, MunicipalAgent)
         request = json.loads(request.body)
         if admin != None: 
             return admin.updateAccount(request.get("newData"), MunicipalAgent)

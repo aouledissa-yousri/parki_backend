@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from django.core.validators import MaxValueValidator
 import time
 # Create your models here.
@@ -81,6 +82,9 @@ class User(models.Model):
         )
         return {"message": "account data has been updated successfully"}
  
+    @staticmethod
+    def login(credentials):
+        return User.objects.get( Q(username=credentials.getUsername()) | Q(email=credentials.getEmail() ))
 
 
 

@@ -22,27 +22,18 @@ class AgentController(UserController):
                     return {"message":"user not found"}
         return result
     
-    @staticmethod 
-    def requestDataUpdate(agent, request, serializer):
-        agent.setData(request.get("newData"))
-        agent = serializer(data = agent.getDataToSignUp())
-
-        if agent.is_valid():
-            agent.save()
-            return {"message": "account data has been updated successfully"}
-
-        return {"message": "account data update failed"}
+    
 
     @staticmethod 
     def updateAccount(request):
         agent = UserController.searchUser(request, MunicipalAgent)[0]
         if agent != None: 
-            return AgentController.requestDataUpdate(agent, request, MunicipalAgentSerializer)
+            return UserController.requestDataUpdate(agent, request, MunicipalAgentSerializer)
 
         else: 
             agent = UserController.searchUser(request, PrivateAgent)[0]
             if agent != None: 
-                return AgentController.requestDataUpdate(agent, request, PrivateAgentSerializer)
+                return UserController.requestDataUpdate(agent, request, PrivateAgentSerializer)
             else: 
                 return {"message": "user not found"}
 

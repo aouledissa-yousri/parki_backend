@@ -32,7 +32,7 @@ class DriverController(UserController):
     
     @staticmethod 
     def updateAccount(request):
-        driver = UserController.searchUser(request, Driver)
+        driver = UserController.searchUser(request, Driver)[0]
         request = json.loads(request)
         if driver != None: 
             driver.setData(request.get("newData"))

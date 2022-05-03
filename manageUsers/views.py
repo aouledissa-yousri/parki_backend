@@ -40,3 +40,7 @@ def updateDriverAccount(request):
 def updateAgentAccount(request):
     return JsonResponse({"result": AgentController.updateAccount(request)})
 
+@api_view(["POST"])
+def updateAdminAccount(request):
+    return JsonResponse({"result": AdminController.updateAccount(request)})
+

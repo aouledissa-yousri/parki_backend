@@ -90,5 +90,20 @@ class AdminController(UserController):
         Admin.deleteDriver(driver)
         return True
     
+    @staticmethod 
+    def updateAccount(request):
+        driver = UserController.searchUser(request, Admin)[0]
+        request = json.loads(request)
+        if driver != None: 
+            driver.setData(request.get("newData"))
+            driver = AdminSerializer(data = driver.getDataToSignUp())
+
+            if driver.is_valid():
+               driver.save()
+               return {"message": "account data has been updated successfully"}
+
+            return {"message": "account data update failed"}
+        return {"message": "user not found"} 
+    
     
 

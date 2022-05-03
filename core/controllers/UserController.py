@@ -65,6 +65,17 @@ class UserController:
             return None 
         
         return user, request
+    
+    @staticmethod 
+    def requestDataUpdate(agent, request, serializer):
+        agent.setData(request.get("newData"))
+        agent = serializer(data = agent.getDataToSignUp())
+
+        if agent.is_valid():
+            agent.save()
+            return {"message": "account data has been updated successfully"}
+
+        return {"message": "account data update failed"}
 
         
     

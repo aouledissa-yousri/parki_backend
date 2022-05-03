@@ -4,6 +4,8 @@ from rest_framework.decorators import api_view
 from core.controllers.AdminController import AdminController
 from core.controllers.AgentController import AgentController
 from core.controllers.DriverController import DriverController
+from core.controllers.MunicipalAgentController import MunicipalAgentController
+from core.controllers.PrivateAgentController import PrivateAgentController
 
 # Create your views here. 
 
@@ -37,10 +39,19 @@ def updateDriverAccount(request):
     return JsonResponse({"result": DriverController.updateAccount(request)})
 
 @api_view(["POST"])
-def updateAgentAccount(request):
-    return JsonResponse({"result": AgentController.updateAccount(request)})
+def updatePrivateAgentAccount(request):
+    return JsonResponse({"result": PrivateAgentController.updateAccount(request)})
+
+@api_view(["POST"])
+def updateMunicipalAgentAccount(request):
+    return JsonResponse({"result": MunicipalAgentController.updateAccount(request)})
 
 @api_view(["POST"])
 def updateAdminAccount(request):
     return JsonResponse({"result": AdminController.updateAccount(request)})
+
+@api_view(["GET"])
+def getDriverData(request, currentUserName):
+    return JsonResponse(DriverController.getDriverData(currentUserName))
+
 

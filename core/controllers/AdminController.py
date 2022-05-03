@@ -92,18 +92,10 @@ class AdminController(UserController):
     
     @staticmethod 
     def updateAccount(request):
-        driver = UserController.searchUser(request, Admin)[0]
-        request = json.loads(request)
-        if driver != None: 
-            driver.setData(request.get("newData"))
-            driver = AdminSerializer(data = driver.getDataToSignUp())
-
-            if driver.is_valid():
-               driver.save()
-               return {"message": "account data has been updated successfully"}
-
-            return {"message": "account data update failed"}
+        admin = UserController.searchUser(request, Admin)
+        request = json.loads(request.body)
+        if admin != None: 
+            return admin.updateAccount(request.get("newData"))
         return {"message": "user not found"} 
-    
     
 

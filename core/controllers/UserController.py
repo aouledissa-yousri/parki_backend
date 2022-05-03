@@ -60,11 +60,11 @@ class UserController:
     def searchUser(request, model):
         request = json.loads(request.body)
         try: 
-            user = model.objects.get(username = request.get("currentUsername"))
+            user = Driver.objects.get(username = request.get("currentUsername"))
         except model.DoesNotExist:
             return None 
         
-        return user, request
+        return user
     
     @staticmethod 
     def requestDataUpdate(agent, request, serializer):
@@ -76,6 +76,14 @@ class UserController:
             return {"message": "account data has been updated successfully"}
 
         return {"message": "account data update failed"}
+    
+    @staticmethod 
+    def getUserData(currentUserName, model):
+        try:
+            driver = model.objects.get(username = currentUserName)
+            return driver.getData()
+        except model.DoesNotExist:
+            return {}
 
         
     

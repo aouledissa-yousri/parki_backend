@@ -9,6 +9,8 @@ urlpatterns = [
     path("deleteAgentAccount/", views.deleteAdminAccount),
     path("deleteDriver/", views.deleteAdminAccount),
     path("updateDriverAccount/", views.updateDriverAccount),
-    path("updateAgentAccount/", views.updateAgentAccount),
-    path("updateAdminAccount/", views.updateAdminAccount)
+    path("updatePrivateAgentAccount/", views.updatePrivateAgentAccount),
+    path("updateMunicipalAgentAccount/", views.updateMunicipalAgentAccount),
+    path("updateAdminAccount/", views.updateAdminAccount),
+    path("getDriverData/<str:currentUserName>/", views.getDriverData)
 ]

@@ -69,6 +69,17 @@ class User(models.Model):
     def restartTries(self):
         self.setTries(3)
         User.objects.filter(id = self.id).update(tries= self.getTries())
+    
+    def updateAccount(self, request):
+        Driver.objects.filter(id = self.id).update(
+            name = request.get("name"),
+            lastname = request.get("lastname"),
+            username = request.get("username"),
+            email = request.get("email") ,
+            phoneNumber = request.get("phoneNumber"),
+            password = request.get("password")
+        )
+        return {"message": "account data has been updated successfully"}
  
 
 
@@ -119,6 +130,9 @@ class Driver(User):
     def getPaymentLogs(self):
         return self.payments
 
+    
+
+
 
 
 
@@ -163,6 +177,12 @@ class Agent(User):
     def setData(self, request):
         super().setData(request)
         self.workAddress = request.get("workAddress")
+    
+    def updateAccount(self, request, model):
+        super().updateAccount(request)
+        model.objects.filter(id = self.id).update(workAddress = request.get("workAddress"))
+        return {"message": "account data has been updated successfully"}
+
 
     class Meta: 
         abstract = True

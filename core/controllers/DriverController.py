@@ -12,6 +12,7 @@ class DriverController(UserController):
         request = json.loads(request.body)
         driver = Driver()
         driver.setData(request)
+        print(driver.password)
         driver = DriverSerializer(data = driver.getDataToSignUp())
         if driver.is_valid():
             driver.save()

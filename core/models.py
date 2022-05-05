@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Q
 from django.core.validators import MaxValueValidator
+from core.classes.Converter import Converter
 import time
 # Create your models here.
 
@@ -12,17 +13,17 @@ class User(models.Model):
     username = models.CharField(max_length = 255, default = "", unique = True)
     email = models.CharField(max_length = 255, default = "", unique = True)
     phoneNumber = models.CharField(max_length = 255, default = "", unique = True)
-    password = models.CharField(max_length = 255, default = "")
+    password  = models.CharField(max_length = 255, default = "")
     tries = models.IntegerField(default = 3, validators = [MaxValueValidator(3)] )
     blocked = models.BooleanField(default = False)
 
     def getDataToSignUp(self):
         return {
-            "name": self.name[0],
-            "lastname": self.lastname[0],
-            "username": self.username[0],
-            "email": self.email[0],
-            "phoneNumber": self.phoneNumber[0],
+            "name": Converter.convertTupleToString(self.name),
+            "lastname": Converter.convertTupleToString(self.lastname),
+            "username": Converter.convertTupleToString(self.username),
+            "email": Converter.convertTupleToString(self.email),
+            "phoneNumber": Converter.convertTupleToString(self.phoneNumber),
             "password": self.password
         }
 

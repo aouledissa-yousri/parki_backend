@@ -18,7 +18,7 @@ class User(models.Model):
 
     def getDataToSignUp(self):
         return {
-            "name": self.name[0],
+            "name":self.name[0],
             "lastname": self.lastname[0],
             "username": self.username[0],
             "email": self.email[0],
@@ -205,6 +205,24 @@ class PaymentLog(models.Model):
     object = models.CharField(max_length = 255, default = "")
     paymentMethod = models.CharField(max_length = 255, default = "")
     driver = models.ForeignKey(Driver, on_delete = models.CASCADE, default = 0)
+    def setDataOfPayment(self,request):
+        self.date = request.get("date")
+        self.paidAmount = request.get("paidAmount")
+        self.object = request.get("object")
+        self.paymentMethod = request.get("paymentMethod")
+        self.driver = request.set("driver")
+    def getDataOfPayment(self):
+        return{
+            "date":self.date,
+            "paidAmount":self.paidAmount,
+            "object":self.object,
+            "paymentMethod":self.paymentMethod,
+            "driver":self.driver
+            
+        }
+        
+        
+        
 
 
 

@@ -79,8 +79,8 @@ class UserController:
     @staticmethod 
     def getUserData(currentUserName, model):
         try:
-            driver = model.objects.get(username = currentUserName)
-            return driver.getData()
+            user = model.objects.get(username = currentUserName)
+            return user.getData()
         except model.DoesNotExist:
             return {}
 

@@ -5,7 +5,7 @@ from core.serializers import PaymentLogSerializer
 
 class PaymentController():
     @staticmethod
-    def payment(request):
+    def addPaymentLog(request):
         request = json.loads(request.body)
         payment=PaymentLog()
         payment.setDataOfPayment(request)

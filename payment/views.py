@@ -5,7 +5,7 @@ from core.controllers.PaymentController import PaymentController
 
 # Create your views here.
 @api_view(["POST"])
-def payment(request):
-    return JsonResponse({"result": PaymentController.payment(request)})
+def addPaymentLog(request):
+    return JsonResponse({"result": PaymentController.addPaymentLog(request)})
 
     

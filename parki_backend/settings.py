@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'signUp',
     'core',
     'manageUsers',
-    'payment'
+    'payment',
+    'transaction'
 ]
 
 MIDDLEWARE = [

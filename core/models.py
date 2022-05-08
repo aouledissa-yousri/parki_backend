@@ -220,7 +220,7 @@ class PaymentLog(models.Model):
             "driver":self.driver
             
         }
-        
+    
         
         
 
@@ -230,6 +230,18 @@ class Transaction(models.Model):
     paymentLink = models.CharField(max_length = 255, default = "")
     cost = models.FloatField(max_length = 255, default = 0)
     driver = models.ForeignKey(Driver, on_delete = models.CASCADE, default = 0)
+    def setDataOfTransaction(self,request):
+        self.paymentLink = request.get("paymentLink")
+        self.cost = request.get("cost")
+        self.driver = request.get("driver")
+    def getDataOfTransaction(self):
+        return{
+            "paymentLink":self.paymentLink,
+            "cost":self.cost,
+            "driver":self.driver
+        }
+    
+        
 
 
 

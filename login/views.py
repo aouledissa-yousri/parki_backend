@@ -5,6 +5,8 @@ from core.controllers.AgentController import AgentController
 from core.controllers.AdminController import AdminController
 from rest_framework.decorators import api_view
 
+from core.controllers.UserController import UserController
+
 
 # Create your views here.
 
@@ -19,6 +21,10 @@ def agentLogin(request):
 @api_view(["POST"])
 def adminLogin(request):
     return JsonResponse(AdminController.login(request))
+
+@api_view(["GET"])
+def checkTokenValidity(request, token):
+    return JsonResponse({"result": UserController.checkTokenValidity(token)})
 
 
 

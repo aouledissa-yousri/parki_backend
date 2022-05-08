@@ -83,6 +83,14 @@ class UserController:
             return user.getData()
         except model.DoesNotExist:
             return {}
+    
+    @staticmethod 
+    def checkTokenValidity(token):
+        try:
+            decodedToken = jwt.decode(token, SECRET_KEY, algorithms = ["HS256"])
+            return "valid token"
+        except jwt.exceptions.DecodeError:
+            return "invalid token"
 
         
     

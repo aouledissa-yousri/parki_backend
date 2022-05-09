@@ -23,7 +23,7 @@ class User(models.Model):
             "lastname": Converter.convertTupleToString(self.lastname),
             "username": Converter.convertTupleToString(self.username),
             "email": Converter.convertTupleToString(self.email),
-            "phoneNumber": Converter.convertTupleToString(self.phoneNumber),
+            "phoneNumber": self.phoneNumber[0],
             "password": self.password
         }
 
@@ -73,7 +73,7 @@ class User(models.Model):
         User.objects.filter(id = self.id).update(tries= self.getTries())
     
     def updateAccount(self, request):
-        Driver.objects.filter(id = self.id).update(
+        User.objects.filter(id = self.id).update(
             name = request.get("name"),
             lastname = request.get("lastname"),
             username = request.get("username"),
@@ -81,7 +81,7 @@ class User(models.Model):
             phoneNumber = request.get("phoneNumber"),
             password = request.get("password")
         )
-        return {"message": "account data has been updated successfully"}
+        return "account data has been updated successfully"
  
     @staticmethod
     def login(credentials):
@@ -143,6 +143,12 @@ class Driver(User):
 
 
 class Admin(User):
+    workAddress = models.CharField(max_length = 255, default="")
+
+    def getData(self):
+        result = super().getData()
+        result["workAddress"] = self.workAddress
+        return result 
 
     @staticmethod
     def createAgentAccount(agent):

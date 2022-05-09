@@ -38,8 +38,9 @@ class AdminController(UserController):
 
         if agent.is_valid():
             Admin.createAgentAccount(agent)
+            return "Agent account created successfully"
 
-        return agent.is_valid()
+        return "Agent account creation failed"
     
     @staticmethod
     def createAdmin(request):
@@ -58,15 +59,15 @@ class AdminController(UserController):
     def deleteAgent(request):
         request = json.loads(request.body)
         try: 
-            agent = MunicipalAgent.objec.get(username = request.get("username"))
+            agent = MunicipalAgent.objects.get(username = request.get("username"))
         except MunicipalAgent.DoesNotExist:
             try: 
-                agent = PrivateAgent.objec.get(username = request.get("username"))
+                agent = PrivateAgent.objects.get(username = request.get("username"))
             except PrivateAgent.DoesNotExist:
-                return False
+                return "Agent account has been deleted successfully"
         
         Admin.deleteAgent(agent)
-        return True
+        return "Agent account has been deleted successfully"
     
     @staticmethod
     def deleteAdmin(request):
@@ -85,10 +86,10 @@ class AdminController(UserController):
         try: 
             driver = Driver.objects.get(username = request.get("username"))
         except Driver.DoesNotExist:
-            return False 
+            return "Driver account deletion failed" 
         
         Admin.deleteDriver(driver)
-        return True
+        return "Driver account has been deleted successfully"
     
     @staticmethod 
     def updateAccount(request):
@@ -96,6 +97,20 @@ class AdminController(UserController):
         request = json.loads(request.body)
         if admin != None: 
             return admin.updateAccount(request.get("newData"))
-        return {"message": "user not found"} 
+        return "user not found"
+    
+    @staticmethod 
+    def getAgents(workAddress, agentType):
+        agents = UserController.getUsers(agentType)
+        agents = [agent for agent in agents if agent["workAddress"] == workAddress]
+        return agents
+    
+    @staticmethod 
+    def getAdmins(workAddress, request):
+        request = json.loads(request.body)
+        admins = UserController.getUsers(Admin)
+        admins = [admin for admin in admins if admin["workAddress"] == workAddress and admin["username"] != request.get("username")]
+        return admins
+    
     
 

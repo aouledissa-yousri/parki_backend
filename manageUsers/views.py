@@ -6,9 +6,12 @@ from core.controllers.AgentController import AgentController
 from core.controllers.DriverController import DriverController
 from core.controllers.MunicipalAgentController import MunicipalAgentController
 from core.controllers.PrivateAgentController import PrivateAgentController
+from core.controllers.UserController import UserController
+from core.models import Driver, PrivateAgent, MunicipalAgent, Admin
 
 # Create your views here. 
 
+#create data
 @api_view(["POST"])
 def createMunicipalAgent(request):
     return JsonResponse({"result": AdminController.createMunicipalAgent(request)})
@@ -22,6 +25,8 @@ def createPrivateAgent(request):
 def createAdminAccount(request):
     return JsonResponse({"result": AdminController.createAdmin(request)})
 
+
+#delete users
 @api_view(["POST"])
 def deleteAgentAccount(request):
     return JsonResponse({"result": AdminController.deleteAgent(request)})
@@ -34,6 +39,9 @@ def deleteAdminAccount(request):
 def deleteDriverAccount(request):
     return JsonResponse({"result": AdminController.deleteDriver(request)})
 
+
+
+#update data
 @api_view(["POST"])
 def updateDriverAccount(request):
     return JsonResponse({"result": DriverController.updateAccount(request)})
@@ -50,8 +58,40 @@ def updateMunicipalAgentAccount(request):
 def updateAdminAccount(request):
     return JsonResponse({"result": AdminController.updateAccount(request)})
 
+
+
+
+
+
+#reading data
+
+
 @api_view(["GET"])
 def getDriverData(request, currentUserName):
     return JsonResponse(DriverController.getDriverData(currentUserName))
+
+@api_view(["GET"])
+def getAdminData(request, currentUserName):
+    return JsonResponse(UserController.getUserData(currentUserName, Admin))
+
+@api_view(["GET"])
+def getDrivers(request):
+    return JsonResponse(UserController.getUsers(Driver), safe=False)
+
+@api_view(["GET"])
+def getPrivateAgents(request, workAddress):
+    return JsonResponse(AdminController.getAgents(workAddress, PrivateAgent), safe=False)
+
+@api_view(["GET"])
+def getMunicipalAgents(request, workAddress):
+    return JsonResponse(AdminController.getAgents(workAddress, MunicipalAgent), safe=False)
+
+@api_view(["POST"])
+def getAdmins(request, workAddress):
+    return JsonResponse(AdminController.getAdmins(workAddress, request), safe=False)
+
+
+
+
 
 

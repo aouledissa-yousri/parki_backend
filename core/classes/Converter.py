@@ -1,5 +1,5 @@
 class Converter: 
 
     @staticmethod 
-    def convertTupleToString(tup: tuple[str]) :
+    def convertTupleToString(tup: tuple) :
         return "".join(tup)

@@ -59,7 +59,7 @@ class UserController:
     def searchUser(request, model):
         request = json.loads(request.body)
         try: 
-            user = Driver.objects.get(username = request.get("currentUsername"))
+            user = model.objects.get(username = request.get("currentUsername"))
         except model.DoesNotExist:
             return None 
         
@@ -93,7 +93,11 @@ class UserController:
             return "invalid token"
 
         
-    
+    @staticmethod 
+    def getUsers(model):
+        query = model.objects.all()
+        users = [user.getData() for user in query]
+        return users
 
         
 

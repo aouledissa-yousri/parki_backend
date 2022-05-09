@@ -6,7 +6,7 @@ from core.classes.Credentials import Credentials
 
 class DriverController(UserController): 
 
-    #criver sign up
+    #driver sign up
     @staticmethod
     def signUp(request):
         request = json.loads(request.body)

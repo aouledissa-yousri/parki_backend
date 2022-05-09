@@ -84,7 +84,7 @@ class AdminController(UserController):
     def deleteDriver(request):
         request = json.loads(request.body)
         try: 
-            driver = Driver.objects.get(username = request.get("username"))
+            driver = Driver.objects.filter(username = request.get("username"))
         except Driver.DoesNotExist:
             return "Driver account deletion failed" 
         

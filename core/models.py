@@ -282,8 +282,13 @@ class Car(models.Model):
             "brand": self.brand,
             "model": self.model,
             "color": self.color,
-            "violations": self.violations
+            "violations": self.setViolations()
         }
+    
+    def setViolations(self):
+        violations = Violation.objects.all()
+        self.violations = [violation.getData() for violation in violations if violation.car.id == self.id]
+        return self.violations
 
 
 
@@ -296,6 +301,16 @@ class Violation(models.Model):
     status = models.CharField(max_length = 255, default="")
     deadLine = models.DateField(default = "")
     car = models.ForeignKey(Car, on_delete = models.CASCADE, default = 0)
+
+    def getData(self):
+        return {
+            "type": self.type,
+            "description": self.description,
+            "date": self.date,
+            "fine": self.fine,
+            "status": self.status,
+            "deadLine": self.deadLine
+        }
 
 
 class Notification(models.Model):

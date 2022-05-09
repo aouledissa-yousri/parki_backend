@@ -106,31 +106,33 @@ class Driver(User):
     
     def getData(self):
         result = super().getData()
-        self.setCars()
-        self.setPaymentLogs()
-        self.setTransactions()
-        result["cars"] = self.getCars() 
-        result["transactions"] = self.getTransactions()
-        result["payments"] = self.getPaymentLogs()
+        result["cars"] = self.setCars()
+        result["transactions"] = self.setPaymentLogs()
+        result["payments"] = self.setTransactions()
         return result
     
     def setCars(self):
-        cars = Car.objects.filter(driver_id = self.id)
-        self.cars = [car for car in cars]
-    
+        cars = Car.objects.all()
+        self.cars = [car.getData() for car in cars if car.driver.id == self.id]
+        return self.cars
+
+
+
     def getCars(self):
         return self.cars
 
     def setTransactions(self):
-        transactions = Transaction.objects.filter(driver_id = self.id)
-        self.cars = [transaction for transaction in transactions]
+        transactions = Transaction.objects.all()
+        self.transactions = [transaction.getData() for transaction in transactions if transaction.driver.id == self.id]
+        return self.transactions
     
     def getTransactions(self):
         return self.transactions
     
     def setPaymentLogs(self):
-        paymentLogs = PaymentLog.objects.filter(driver_id = self.id)
-        self.payments = [paymentLog for paymentLog in paymentLogs]
+        paymentLogs = PaymentLog.objects.all()
+        self.payments = [paymentLog.getData() for paymentLog in paymentLogs if paymentLog.driver.id == self.id]
+        return self.payments
     
     def getPaymentLogs(self):
         return self.payments
@@ -223,6 +225,14 @@ class PaymentLog(models.Model):
     paymentMethod = models.CharField(max_length = 255, default = "")
     driver = models.ForeignKey(Driver, on_delete = models.CASCADE, default = 0)
 
+    def getData(self):
+        return {
+            "date": self.date,
+            "paidAmount": self.paidAmount,
+            "object": self.object,
+            "paymentMethod": self.paymentMethod,
+        }
+
 
 
 class Transaction(models.Model):
@@ -230,6 +240,11 @@ class Transaction(models.Model):
     cost = models.FloatField(max_length = 255, default = 0)
     driver = models.ForeignKey(Driver, on_delete = models.CASCADE, default = 0)
 
+    def getData(self):
+        return {
+            "paymentLink": self.paymentLink,
+            "cost": self.cost,
+        }
 
 
 
@@ -256,8 +271,19 @@ class Car(models.Model):
     model = models.CharField(max_length = 255, default="")
     color = models.CharField(max_length = 255, default="")
     driver = models.ForeignKey(Driver, on_delete = models.CASCADE, default = 0)
-    parkingLot = models.ForeignKey(ParkingLot, on_delete = models.CASCADE, default = 0)
-    MunicipalityZone = models.ForeignKey(MunicipalityZone, on_delete = models.CASCADE, default = 0)
+    parkingLot = models.ForeignKey(ParkingLot, on_delete = models.CASCADE, default = None, null=True)
+    MunicipalityZone = models.ForeignKey(MunicipalityZone, on_delete = models.CASCADE, default = None, null=True)
+    violations = list()
+
+
+    def getData(self):
+        return {
+            "carSerialNumber": self.carSerialNumber,
+            "brand": self.brand,
+            "model": self.model,
+            "color": self.color,
+            "violations": self.violations
+        }
 
 
 

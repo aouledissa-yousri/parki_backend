@@ -25,8 +25,10 @@ class AdminController(UserController):
         
         if agent.is_valid():
             Admin.createAgentAccount(agent)
+            return "Agent account created successfully"
+
+        return "Agent account creation failed"
         
-        return agent.is_valid()
     
     @staticmethod 
     def createMunicipalAgent(request): 
@@ -47,13 +49,15 @@ class AdminController(UserController):
         request = json.loads(request.body)
         admin = Admin()
         admin.setData(request)
-        print(admin.getData())
         admin = AdminSerializer(data = admin.getDataToSignUp())
 
         if admin.is_valid():
             Admin.createAdminAccount(admin)
+            return "Admin account created successfully"
+
         
-        return admin.is_valid()
+        return "Admin account creation failed"
+
     
     @staticmethod 
     def deleteAgent(request):
@@ -75,10 +79,10 @@ class AdminController(UserController):
         try: 
             admin = Admin.objects.get(username = request.get("username"))
         except Admin.DoesNotExist:
-            return False 
+            return "Admin account deletion failed" 
         
         Admin.deleteAdmin(admin)
-        return True
+        return "Admin account has been deleted successfully"
     
     @staticmethod 
     def deleteDriver(request):

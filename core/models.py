@@ -149,6 +149,16 @@ class Admin(User):
         result = super().getData()
         result["workAddress"] = self.workAddress
         return result 
+    
+    def getDataToSignUp(self):
+        result = super().getDataToSignUp()
+        result["workAddress"] = self.workAddress
+        return result
+    
+    def setData(self, request):
+        super().setData(request)
+        self.workAddress = request.get("workAddress")
+
 
     @staticmethod
     def createAgentAccount(agent):

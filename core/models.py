@@ -271,6 +271,36 @@ class Car(models.Model):
     driver = models.ForeignKey(Driver, on_delete = models.CASCADE, default = 0)
     parkingLot = models.ForeignKey(ParkingLot, on_delete = models.CASCADE, default = 0)
     MunicipalityZone = models.ForeignKey(MunicipalityZone, on_delete = models.CASCADE, default = 0)
+    def setDataOfCar(self,request):
+        self.carSerialNumber = request.get("carSerialNumber")
+        self.brand = request.get("brand")
+        self.model = request.get("model")
+        self.color = request.get("color")
+        self.driver = request.get("driver")
+        self.parkingLot = request.get("parkingLot")
+        self.MunicipalityZone = request.get("MunicipalityZone")
+    def getDataOfCar(self):
+        return{
+            "carSerialNumber": self.carSerialNumber,
+            "brand": self.brand,
+            "model": self.model,
+            "color": self.color,
+            "driver": self.driver,
+            "parkingLot": self.parkingLot,
+            "MunicipalityZone": self.MunicipalityZone
+        }
+    def updateCar(self, request):
+        Car.objects.filter(id = self.id).update(
+            carSerialNumber = request.get("carSerialNumber"),
+            brand = request.get("brand"),
+            model = request.get("model"),
+            color = request.get("color") ,
+            driver = request.get("driver"),
+            parkingLot = request.get("parkingLot"),
+            MunicipalityZone = request.get("MunicipalityZone")
+
+        )
+        return {"message": "account data has been updated successfully"}
 
 
 

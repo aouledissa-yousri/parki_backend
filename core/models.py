@@ -270,7 +270,7 @@ class Car(models.Model):
     color = models.CharField(max_length = 255, default="")
     driver = models.ForeignKey(Driver, on_delete = models.CASCADE, default = 0)
     parkingLot = models.ForeignKey(ParkingLot, on_delete = models.CASCADE, default = 0)
-    MunicipalityZone = models.ForeignKey(MunicipalityZone, on_delete = models.CASCADE, default = 0)
+    municipalityZone = models.ForeignKey(MunicipalityZone, on_delete = models.CASCADE, default = 0)
     def setDataOfCar(self,request):
         self.carSerialNumber = request.get("carSerialNumber")
         self.brand = request.get("brand")
@@ -287,7 +287,7 @@ class Car(models.Model):
             "color": self.color,
             "driver": self.driver,
             "parkingLot": self.parkingLot,
-            "MunicipalityZone": self.MunicipalityZone
+            "municipalityZone": self.municipalityZone
         }
     def updateCar(self, request):
         Car.objects.filter(id = self.id).update(
@@ -297,7 +297,7 @@ class Car(models.Model):
             color = request.get("color") ,
             driver = request.get("driver"),
             parkingLot = request.get("parkingLot"),
-            MunicipalityZone = request.get("MunicipalityZone")
+            municipalityZone = request.get("municipalityZone")
 
         )
         return {"message": "account data has been updated successfully"}

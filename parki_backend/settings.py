@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'login',
     'signUp',
     'core',
-    'manageUsers'
+    'manageUsers',
+    'manageCarSpaces'
 ]
 
 MIDDLEWARE = [

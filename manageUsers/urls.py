@@ -22,7 +22,7 @@ urlpatterns = [
     path("getAdminData/<str:currentUserName>/", views.getAdminData),
     path("getDriverData/<str:currentUserName>/", views.getDriverData),
     path("getDrivers/", views.getDrivers),
-    path("getPrivateAgents/<str:workAddress>", views.getPrivateAgents),
-    path("getMunicipalAgents/<str:workAddress>", views.getMunicipalAgents),
-    path("getAdmins/<str:workAddress>", views.getAdmins)
+    path("getPrivateAgents/", views.getPrivateAgents),
+    path("getMunicipalAgents/", views.getMunicipalAgents),
+    path("getAdmins/", views.getAdmins)
 ]

@@ -79,16 +79,16 @@ def getDrivers(request):
     return JsonResponse(UserController.getUsers(Driver), safe=False)
 
 @api_view(["GET"])
-def getPrivateAgents(request, workAddress):
-    return JsonResponse(AdminController.getAgents(workAddress, PrivateAgent), safe=False)
+def getPrivateAgents(request):
+    return JsonResponse(AdminController.getAgents(PrivateAgent), safe=False)
 
 @api_view(["GET"])
-def getMunicipalAgents(request, workAddress):
-    return JsonResponse(AdminController.getAgents(workAddress, MunicipalAgent), safe=False)
+def getMunicipalAgents(request):
+    return JsonResponse(AdminController.getAgents(MunicipalAgent), safe=False)
 
 @api_view(["POST"])
-def getAdmins(request, workAddress):
-    return JsonResponse(AdminController.getAdmins(workAddress, request), safe=False)
+def getAdmins(request):
+    return JsonResponse(AdminController.getAdmins(request), safe=False)
 
 
 

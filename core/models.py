@@ -145,22 +145,6 @@ class Driver(User):
 
 
 class Admin(User):
-    workAddress = models.CharField(max_length = 255, default="")
-
-    def getData(self):
-        result = super().getData()
-        result["workAddress"] = self.workAddress
-        return result 
-    
-    def getDataToSignUp(self):
-        result = super().getDataToSignUp()
-        result["workAddress"] = self.workAddress
-        return result
-    
-    def setData(self, request):
-        super().setData(request)
-        self.workAddress = request.get("workAddress")
-
 
     @staticmethod
     def createAgentAccount(agent):
@@ -181,6 +165,22 @@ class Admin(User):
     @staticmethod 
     def deleteDriver(driver):
         driver.delete()
+    
+    @staticmethod 
+    def createParkingLot(parkingLot):
+        parkingLot.save()
+    
+    @staticmethod 
+    def createMunicipalityZone(municipalityZone):
+        municipalityZone.save()
+
+    @staticmethod
+    def deleteParkingLot(parkingLot):
+        parkingLot.delete()
+    
+    @staticmethod
+    def deleteMunicipalityZone(municipalityZone):
+        municipalityZone.delete()
 
 
 
@@ -250,18 +250,50 @@ class Transaction(models.Model):
 
 
 class ParkingLot(models.Model):
-    address = models.CharField(max_length = 255, default="")
+    address = models.CharField(max_length = 255, default="", unique = True)
     name = models.CharField(max_length = 255, default="")
     nbPlaces = models.IntegerField(default = 0)
     nbAvailablePlaces = models.IntegerField(default = 0)
     cars = list()
 
+    def getData(self):
+        return {
+            "address": self.address,
+            "name": self.name,
+            "nbPlaces": self.nbPlaces,
+            "nbAvailablePlaces": self.nbAvailablePlaces,
+            "cars": self.cars
+        }
+    
+    def setData(self,request):
+        self.address = request.get("address")
+        self.name = request.get("name")
+        self.nbPlaces = request.get("nbPlaces")
+        self.nbAvailablePlaces = request.get("nbPlaces")
+        self.cars = []
+
 
 
 class MunicipalityZone(models.Model):
     municipality = models.CharField(max_length = 255, default="")
+    address = models.CharField(max_length = 255, default="", unique = True)
     pricePerHour = models.FloatField(max_length = 255, default = 0)
     cars = list()
+
+    def getData(self):
+        return {
+            "municipality": self.municipality,
+            "address": self.address,
+            "pricePerHour": self.pricePerHour,
+            "cars": self.cars
+        }
+
+    def setData(self,request):
+        self.municipality = request.get("municipality")
+        self.pricePerHour = request.get("pricePerHour")
+        self.address = request.get("address")
+        self.cars = []
+
 
 
 
@@ -272,7 +304,7 @@ class Car(models.Model):
     color = models.CharField(max_length = 255, default="")
     driver = models.ForeignKey(Driver, on_delete = models.CASCADE, default = 0)
     parkingLot = models.ForeignKey(ParkingLot, on_delete = models.CASCADE, default = None, null=True)
-    MunicipalityZone = models.ForeignKey(MunicipalityZone, on_delete = models.CASCADE, default = None, null=True)
+    municipalityZone = models.ForeignKey(MunicipalityZone, on_delete = models.CASCADE, default = None, null=True)
     violations = list()
 
 

@@ -33,6 +33,7 @@ class AdminController(UserController):
     @staticmethod 
     def createMunicipalAgent(request): 
         request = json.loads(request.body)
+        print(request)
 
         agent = MunicipalAgent()
         agent.setData(request)
@@ -104,17 +105,13 @@ class AdminController(UserController):
         return "user not found"
     
     @staticmethod 
-    def getAgents(workAddress, agentType):
+    def getAgents(agentType):
         agents = UserController.getUsers(agentType)
-        agents = [agent for agent in agents if agent["workAddress"] == workAddress]
         return agents
     
     @staticmethod 
-    def getAdmins(workAddress, request):
+    def getAdmins(request):
         request = json.loads(request.body)
         admins = UserController.getUsers(Admin)
-        admins = [admin for admin in admins if admin["workAddress"] == workAddress and admin["username"] != request.get("username")]
+        admins = [admin for admin in admins if admin["username"] != request.get("username")] 
         return admins
-    
-    
-

@@ -133,6 +133,18 @@ class Driver(User):
     
     def getPaymentLogs(self):
         return self.payments
+    
+    # def addCar(self,car):
+    #     self.cars.append(car.getData())
+    #     car.save()
+        
+        
+        
+        
+        
+        
+        
+        
 
     
 
@@ -205,40 +217,44 @@ class PaymentLog(models.Model):
     object = models.CharField(max_length = 255, default = "")
     paymentMethod = models.CharField(max_length = 255, default = "")
     driver = models.ForeignKey(Driver, on_delete = models.CASCADE, default = 0)
+    
     def setDataOfPayment(self,request):
         self.date = request.get("date")
         self.paidAmount = request.get("paidAmount")
         self.object = request.get("object")
         self.paymentMethod = request.get("paymentMethod")
-        self.driver = request.set("driver")
+        driver=Driver.objects.get(id=request.get("driver"))
+        self.driver = driver
+        
     def getDataOfPayment(self):
         return{
             "date":self.date,
             "paidAmount":self.paidAmount,
             "object":self.object,
             "paymentMethod":self.paymentMethod,
-            "driver":self.driver
+            "driver":self.driver.id
             
         }
     
         
         
 
-
-
 class Transaction(models.Model):
     paymentLink = models.CharField(max_length = 255, default = "")
     cost = models.FloatField(max_length = 255, default = 0)
     driver = models.ForeignKey(Driver, on_delete = models.CASCADE, default = 0)
     def setDataOfTransaction(self,request):
-        self.paymentLink = request.get("paymentLink")
-        self.cost = request.get("cost")
-        self.driver = request.get("driver")
+            self.paymentLink = request.get("paymentLink")
+            self.cost = request.get("cost")
+            driver=Driver.objects.get(id=request.get("driver"))
+            self.driver = driver
+            
+            
     def getDataOfTransaction(self):
         return{
             "paymentLink":self.paymentLink,
             "cost":self.cost,
-            "driver":self.driver
+            "driver":self.driver.id
         }
     
         
@@ -269,38 +285,61 @@ class Car(models.Model):
     model = models.CharField(max_length = 255, default="")
     color = models.CharField(max_length = 255, default="")
     driver = models.ForeignKey(Driver, on_delete = models.CASCADE, default = 0)
-    parkingLot = models.ForeignKey(ParkingLot, on_delete = models.CASCADE, default = 0)
-    municipalityZone = models.ForeignKey(MunicipalityZone, on_delete = models.CASCADE, default = 0)
+    parkingLot = models.ForeignKey(ParkingLot, on_delete = models.CASCADE, default = None)
+    municipalityZone = models.ForeignKey(MunicipalityZone, on_delete = models.CASCADE, default = None)
+    
     def setDataOfCar(self,request):
         self.carSerialNumber = request.get("carSerialNumber")
         self.brand = request.get("brand")
         self.model = request.get("model")
         self.color = request.get("color")
-        self.driver = request.get("driver")
-        self.parkingLot = request.get("parkingLot")
-        self.MunicipalityZone = request.get("MunicipalityZone")
+        driver=Driver.objects.get(id=request.get("driver"))
+        self.driver = driver
+        self.parkingLot = None
+        self.municipalityZone = None
+        
     def getDataOfCar(self):
+        try:
+            x=self.parkingLot
+        except Car.parkingLot.RelatedObjectDoesNotExist:
+            x=None
+        try:
+            y=self.municipalityZone
+        except Car.municipalityZone.RelatedObjectDoesNotExist:
+            y=None
+        
         return{
-            "carSerialNumber": self.carSerialNumber,
-            "brand": self.brand,
-            "model": self.model,
-            "color": self.color,
-            "driver": self.driver,
-            "parkingLot": self.parkingLot,
-            "municipalityZone": self.municipalityZone
-        }
+        "carSerialNumber": self.carSerialNumber,
+        "brand": self.brand,
+        "model": self.model,
+        "color": self.color,
+        "driver": self.driver.id,
+        "parkingLot": x,
+        "municipalityZone": y
+            
+            }
+        
     def updateCar(self, request):
         Car.objects.filter(id = self.id).update(
             carSerialNumber = request.get("carSerialNumber"),
             brand = request.get("brand"),
             model = request.get("model"),
             color = request.get("color") ,
-            driver = request.get("driver"),
-            parkingLot = request.get("parkingLot"),
-            municipalityZone = request.get("municipalityZone")
+            driver = request.get("driver")
 
         )
-        return {"message": "account data has been updated successfully"}
+        return {"message": "car data has been updated successfully"}
+    
+    def parkCarMunicipal(self,request):
+        Car.objects.filter(id=self.id).update(
+            municipalityZone=request.get("municipalityZone")
+            
+        )
+    
+    def parkCarPrivate(self,request):
+        Car.objects.filter(id=self.id).update(
+            parkingLot=request.get("parkingLot")
+        )
 
 
 
@@ -313,6 +352,29 @@ class Violation(models.Model):
     status = models.CharField(max_length = 255, default="")
     deadLine = models.DateField(default = "")
     car = models.ForeignKey(Car, on_delete = models.CASCADE, default = 0)
+    
+    def setDataOfViolation(self,request):
+        self.type = request.get("type")
+        self.description = request.get("description")
+        self.date = request.get("date")
+        self.fine = request.get("fine")
+        self.status = request.get("status")
+        self.deadLine = request.get("deadLine")
+        car=Car.objects.get(id=request.get("car"))
+        self.car=car
+        
+    def getDataOfViolation(self):
+        return{
+            "type":self.type,
+            "description":self.description,
+            "date":self.date,
+            "fine":self.fine,
+            "status":self.status,
+            "deadLine":self.deadLine,
+            "car":self.car.id,
+
+        }
+       
 
 
 class Notification(models.Model):

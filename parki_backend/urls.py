@@ -23,5 +23,7 @@ urlpatterns = [
     path("signUp/", include("signUp.urls")),
     path("manageUsers/", include("manageUsers.urls")),
     path("transaction/", include("transaction.urls")),
-    path("driver/",include("car.urls"))
+    path("car/",include("car.urls")),
+    path("payment/",include("payment.urls")),
+    path("violation/",include("violation.urls"))
 ]

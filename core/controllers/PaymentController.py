@@ -10,7 +10,11 @@ class PaymentController():
         payment=PaymentLog()
         payment.setDataOfPayment(request)
         payment=PaymentLogSerializer(data=payment.getDataOfPayment())
-        payment.save()
+        if payment.is_valid():
+            payment.save()
+            return "payment has been added successfully"
+        else:
+            return payment.is_valid()
         
         
 

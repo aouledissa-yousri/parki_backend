@@ -5,5 +5,9 @@ urlpatterns = [
     path("get/", views.getCar),
     path("add/",views.addCar),
     path("update/",views.updateCar),
-    path("delete/",views.deleteCar)
+    path("delete/",views.deleteCar),
+    path("parkCarMunicipal",views.parkCarMunicipal),
+    path("parkCarPrivate",views.parkCarPrivate)
+
+    
 ]

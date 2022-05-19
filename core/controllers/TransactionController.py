@@ -16,16 +16,24 @@ class TransactionController():
         transaction=Transaction()
         transaction.setDataOfTransaction(request)
         transaction=TransactionSerializer(data=transaction.getDataOfTransaction())
-        transaction.save()
+        if transaction.is_valid():
+            transaction.save()
+        return transaction.is_valid()
     
     @staticmethod 
-    def getTransactionData(DriverId):
-        transaction=Transaction.objects.get(driver=DriverId)
-        return transaction.getDataOfTransaction();
+    def getTransactionData(request):
+        request = json.loads(request.body)
+        try:
+            
+            transaction=Transaction.objects.get(driver=request.get("driverId"))
+            return transaction.getDataOfTransaction();
+        except Transaction.DoesNotExist:
+            return "you have not any transaction"
     
     @staticmethod
-    def deleteTransaction(currentPaymentLink):
-        transaction = get_object_or_404(Transaction, paymentLink=currentPaymentLink)
+    def deleteTransaction(request):
+        request = json.loads(request.body)
+        transaction = get_object_or_404(Transaction, paymentLink=request.get("paymentLink"))
         transaction.delete()
         
         

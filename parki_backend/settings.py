@@ -27,8 +27,8 @@ SECRET_KEY = 'django-insecure-teybm%**j$my+yaio4=mpp!!wh%)3*&3sy%3a9tou7r@2nw44(
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "parki-backend-test.herokuapp.com",
     "127.0.0.1",
+    "parki-backend.herokuapp.com/",
     "localhost",
     "web.postman.co"
 ]

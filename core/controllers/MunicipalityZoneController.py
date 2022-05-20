@@ -1,5 +1,5 @@
 import json
-from core.models import MunicipalityZone, Admin
+from core.models import MunicipalityZone, Admin, Car
 from core.serializers import MunicipalityZoneSerializer
 
 class MunicipalityZoneController:
@@ -31,3 +31,28 @@ class MunicipalityZoneController:
         Admin.deleteMunicipalityZone(municipalityZone)
 
         return "Municipality zone has been deleted successfully"
+    
+
+    @staticmethod 
+    def releaseCar(request):
+        request = json.loads(request.body)
+        try: 
+            municipalityZone = MunicipalityZone.objects.get(address = request.get("address"))
+            car = Car.objects.get(carSerialNumber = request.get("carSerialNumber"))
+            municipalityZone.releaseCar(car)
+            return "car has been released from the municipality zone"
+
+        except Car.DoesNotExist:
+            return "Car does not exist"
+    
+    @staticmethod 
+    def parkCar(request):
+        try:
+            request = json.loads(request.body)
+            municipalityZone = MunicipalityZone.objects.get(address = request.get("address"))
+            car = Car.objects.get(carSerialNumber = request.get("carSerialNumber"))
+            municipalityZone.parkCar(car)
+            return "you reserved a place at" + municipalityZone.municipality 
+        
+        except MunicipalityZone.DoesNotExist:
+            return "municipality zone does not exist"

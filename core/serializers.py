@@ -52,7 +52,7 @@ class MunicipalityZoneSerializer(serializers.ModelSerializer):
 class CarSerializer(serializers.ModelSerializer):
     class Meta: 
         model = Car
-        fields = "__all__"
+        fields = ['carSerialNumber', 'brand', 'model', 'color', 'driver']
 
 class ViolationSerializer(serializers.ModelSerializer):
     class Meta: 

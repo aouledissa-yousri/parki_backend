@@ -7,6 +7,25 @@ import time
 
 
 
+class CarZone: 
+    cars = list()
+
+    def releaseCar(self, car):
+        Car.objects.filter(id = car.id).update(
+            municipalityZone_id = None,
+            parkingLot_id = None
+        )
+        #self.cars.remove(car)
+    
+    def parkCar(self, car):
+        pass
+    
+
+
+
+
+
+
 class User(models.Model):
     name = models.CharField(max_length = 255, default="")
     lastname = models.CharField(max_length = 255, default="")
@@ -136,7 +155,11 @@ class Driver(User):
     
     def getPaymentLogs(self):
         return self.payments
-
+    
+    def addCar(self, car):
+        #self.cars.append(car.getData())
+        car.save()
+    
     
 
 
@@ -211,7 +234,10 @@ class Agent(User):
         abstract = True
 
 class MunicipalAgent(Agent):
-    pass 
+
+    @staticmethod
+    def submitFineReport(violation):
+        violation.save() 
 
 
 class PrivateAgent(Agent):
@@ -232,6 +258,25 @@ class PaymentLog(models.Model):
             "object": self.object,
             "paymentMethod": self.paymentMethod,
         }
+    
+    def setDataOfPayment(self,request):
+        print(request)
+        self.date = request.get("date")
+        self.paidAmount = request.get("paidAmount")
+        self.object = request.get("object")
+        self.paymentMethod = request.get("paymentMethod")
+        driver=Driver.objects.get(id=request.get("driver"))
+        self.driver = driver
+        
+    def getDataOfPayment(self):
+        return{
+            "date":self.date,
+            "paidAmount":self.paidAmount,
+            "object":self.object,
+            "paymentMethod":self.paymentMethod,
+            "driver":self.driver.id
+            
+        }
 
 
 
@@ -245,16 +290,30 @@ class Transaction(models.Model):
             "paymentLink": self.paymentLink,
             "cost": self.cost,
         }
+    
+    def setDataOfTransaction(self,request):
+        self.paymentLink = request.get("paymentLink")
+        self.cost = request.get("cost")
+        driver=Driver.objects.get(id=request.get("driver"))
+        self.driver = driver
+            
+            
+    def getDataOfTransaction(self):
+        return{
+            "paymentLink":self.paymentLink,
+            "cost":self.cost,
+            "driver":self.driver.id
+        }
 
 
 
 
-class ParkingLot(models.Model):
+class ParkingLot(models.Model, CarZone):
     address = models.CharField(max_length = 255, default="", unique = True)
     name = models.CharField(max_length = 255, default="")
     nbPlaces = models.IntegerField(default = 0)
     nbAvailablePlaces = models.IntegerField(default = 0)
-    cars = list()
+    
 
     def getData(self):
         return {
@@ -262,7 +321,7 @@ class ParkingLot(models.Model):
             "name": self.name,
             "nbPlaces": self.nbPlaces,
             "nbAvailablePlaces": self.nbAvailablePlaces,
-            "cars": self.cars
+            "cars": super().cars
         }
     
     def setData(self,request):
@@ -271,21 +330,41 @@ class ParkingLot(models.Model):
         self.nbPlaces = request.get("nbPlaces")
         self.nbAvailablePlaces = request.get("nbPlaces")
         self.cars = []
+    
+    def releaseCar(self, car):
+        super().releaseCar(car)
+        
+        self.nbAvailablePlaces + 1
+        ParkingLot.objects.filter(id = self.id).update(
+            nbAvailablePlaces = self.nbAvailablePlaces 
+        )
+    
+    def parkCar(self, car):
+        super().cars.append(car)
+        Car.objects.filter(carSerialNumber = car.carSerialNumber).update(
+            parkingLot_id = self.id
+        )
+
+        self.nbAvailablePlaces - 1
+        ParkingLot.objects.filter(id = self.id).update(
+            nbAvailablePlaces = self.nbAvailablePlaces 
+        )
+    
+    
 
 
 
-class MunicipalityZone(models.Model):
+class MunicipalityZone(models.Model, CarZone):
     municipality = models.CharField(max_length = 255, default="")
     address = models.CharField(max_length = 255, default="", unique = True)
     pricePerHour = models.FloatField(max_length = 255, default = 0)
-    cars = list()
 
     def getData(self):
         return {
             "municipality": self.municipality,
             "address": self.address,
             "pricePerHour": self.pricePerHour,
-            "cars": self.cars
+            "cars": super().cars
         }
 
     def setData(self,request):
@@ -293,6 +372,12 @@ class MunicipalityZone(models.Model):
         self.pricePerHour = request.get("pricePerHour")
         self.address = request.get("address")
         self.cars = []
+    
+    def parkCar(self, car):
+        super().cars.append(car)
+        Car.objects.filter(carSerialNumber = car.carSerialNumber).update(
+            municipalityZone_id = self.id
+        )
 
 
 
@@ -308,6 +393,7 @@ class Car(models.Model):
     violations = list()
 
 
+
     def getData(self):
         return {
             "carSerialNumber": self.carSerialNumber,
@@ -315,7 +401,49 @@ class Car(models.Model):
             "model": self.model,
             "color": self.color,
             "violations": self.setViolations()
-        }
+        } 
+    
+    def setData(self,request):
+        self.carSerialNumber = request.get("carSerialNumber")
+        self.brand = request.get("brand")
+        self.model = request.get("model")
+        self.color = request.get("color")
+        driver=Driver.objects.get(id=request.get("driver"))
+        self.driver = driver
+        self.parkingLot = None
+        self.municipalityZone = None
+        
+    '''def getDataOfCar(self):
+        try:
+            x=self.parkingLot
+        except Car.parkingLot.RelatedObjectDoesNotExist:
+            x=None
+        try:
+            y=self.municipalityZone
+        except Car.municipalityZone.RelatedObjectDoesNotExist:
+            y=None
+        
+        return{
+            "carSerialNumber": self.carSerialNumber,
+            "brand": self.brand,
+            "model": self.model,
+            "color": self.color,
+            "driver": self.driver.id,
+            "parkingLot": x,
+            "municipalityZone": y
+            
+        }'''
+        
+    def updateCar(self, request):
+        Car.objects.filter(id = self.id).update(
+            carSerialNumber = request.get("carSerialNumber"),
+            brand = request.get("brand"),
+            model = request.get("model"),
+            color = request.get("color") ,
+            driver = request.get("driver")
+
+        )
+        return {"message": "car data has been updated successfully"}
     
     def setViolations(self):
         violations = Violation.objects.all()
@@ -343,6 +471,38 @@ class Violation(models.Model):
             "status": self.status,
             "deadLine": self.deadLine
         }
+    
+    def setDataOfViolation(self,request):
+        self.type = request.get("type")
+        self.description = request.get("description")
+        self.date = request.get("date")
+        self.fine = request.get("fine")
+        self.status = request.get("status")
+        self.deadLine = request.get("deadLine")
+        car = Car.objects.get(id=request.get("car"))
+        self.car=car
+        
+    def getDataOfViolation(self):
+        return{
+            "type":self.type,
+            "description":self.description,
+            "date":self.date,
+            "fine":self.fine,
+            "status":self.status,
+            "deadLine":self.deadLine,
+            "car":self.car.id,
+
+        }
+    
+    def updateViolation(self, violation, carId): 
+        Violation.objects.filter(car_id = carId).update(
+            type = violation.get("type"),
+            description = violation.get("description"),
+            date = violation.get("date"),
+            fine = violation.get("fine"),
+            status = violation.get("status"),
+            deadLine = violation.get("deadLine")
+        )
 
 
 class Notification(models.Model):

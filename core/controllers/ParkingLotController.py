@@ -1,5 +1,5 @@
 import json
-from core.models import ParkingLot, Admin
+from core.models import ParkingLot, Admin, Car
 from core.serializers import ParkingLotSerializer
 
 class ParkingLotController:
@@ -31,3 +31,31 @@ class ParkingLotController:
         Admin.deleteParkingLot(parkingLot)
 
         return "Parking Lot has been deleted successfully"
+    
+
+    @staticmethod 
+    def releaseCar(request):
+        request = json.loads(request.body)
+        try: 
+            parkingLot = ParkingLot.objects.get(address = request.get("address"))
+            car = Car.objects.get(carSerialNumber = request.get("carSerialNumber"))
+            parkingLot.releaseCar(car)
+            return "car has been released from the parking lot"
+
+        except Car.DoesNotExist:
+            return "Car does not exist"
+    
+    @staticmethod 
+    def parkCar(request):
+        try:
+            request = json.loads(request.body)
+            parkingLot = ParkingLot.objects.get(address = request.get("address"))
+            car = Car.objects.get(carSerialNumber = request.get("carSerialNumber"))
+            if parkingLot.nbAvailablePlaces == 0:
+                return "parking lot is full!!!"
+                
+            parkingLot.parkCar(car)
+            return "you reserved a place at " + parkingLot.name 
+        
+        except ParkingLot.DoesNotExist:
+            return "parking lot does not exist"

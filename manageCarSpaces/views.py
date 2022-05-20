@@ -43,3 +43,23 @@ def deleteParkingLot(request):
 @api_view(["POST"])
 def deleteMuncipalityZone(request):
     return JsonResponse({"result": MunicipalityZoneController.deleteMuncipalityZone(request)})
+
+
+#reserving places 
+@api_view(["POST"])
+def parCarAtParkingLot(request):
+    return JsonResponse({"result": ParkingLotController.parkCar(request)})
+
+@api_view(["POST"])
+def parkCarAtMunicipalZone(request):
+    return JsonResponse({"result": MunicipalityZoneController.parkCar(request)})
+
+
+#release cars 
+@api_view(["POST"])
+def releaseFromParkingLot(request):
+    return JsonResponse({"result": ParkingLotController.releaseCar(request)})
+
+@api_view(["POST"])
+def releaseFromMunicipalZone(request):
+    return JsonResponse({"result": MunicipalityZoneController.releaseCar(request)})

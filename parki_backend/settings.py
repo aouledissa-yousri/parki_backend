@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,25 +26,40 @@ SECRET_KEY = 'django-insecure-teybm%**j$my+yaio4=mpp!!wh%)3*&3sy%3a9tou7r@2nw44(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "parki-backend.herokuapp.com/",
+    "localhost",
+    "web.postman.co"
+]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'login',
-    'core'
+    'signUp',
+    'core',
+    'manageUsers',
+    'manageCarSpaces',
+    'car',
+    'payment',
+    'transaction',
+    'violation'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -76,19 +92,22 @@ WSGI_APPLICATION = 'parki_backend.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
+   
+
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd6tilnvdj47acv',
+        'USER': 'sretehciawmebo',
+        'PASSWORD': '7d6ed30e50b577bc603f148dff137f6ac5cec37181c857da72ca3f279344e71c',
+        'HOST': 'ec2-52-3-2-245.compute-1.amazonaws.com',
+        'PORT': '5432'
     },
 
-    'parki': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'd3iu20lta567me',
-        'USER': 'ngdtxfkoyoziey',
-        'PASSWORD': 'ff62d529e766ec3d6a9eba8f10bb6eab2f08703f01444c04f47b4886aed34bf5',
-        'HOST': 'ec2-52-5-110-35.compute-1.amazonaws.com',
-        'PORT': '5432'
-    }
+    #'default': {
+    #    'ENGINE': 'django.db.backends.sqlite3',
+    #    'NAME': BASE_DIR / 'db.sqlite3',
+    #}, 
+
 }
 
 
@@ -108,6 +127,10 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8100"
 ]
 
 
@@ -132,3 +155,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
